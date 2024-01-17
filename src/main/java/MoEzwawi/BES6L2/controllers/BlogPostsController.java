@@ -2,6 +2,7 @@ package MoEzwawi.BES6L2.controllers;
 
 import MoEzwawi.BES6L2.dtos.BlogPostDTO;
 import MoEzwawi.BES6L2.entities.BlogPost;
+import MoEzwawi.BES6L2.entities.enums.BlogPostCategory;
 import MoEzwawi.BES6L2.services.BlogPostsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +17,20 @@ public class BlogPostsController {
     @Autowired
     private BlogPostsService blogPostsService;
     @GetMapping
-    public List<BlogPost> getBlogPosts(@RequestParam(required = false) String category){
-        /*if(category!=null){
-            return this.blogPostsService.filterByCategory(category);
-        }else {*/
-            return this.blogPostsService.getBlogPosts();
-      //  }
+    public List<BlogPost> getBlogPosts(@RequestParam(required = false) BlogPostCategory category, @RequestParam(required = false) UUID authorId){
+        if(category==null){
+            if(authorId==null){
+                return this.blogPostsService.getBlogPosts();
+            }else{
+                return this.blogPostsService.filterByAuthor(authorId);
+            }
+        }else{
+            if(authorId==null){
+                return this.blogPostsService.filterByCategory(category);
+            }else{
+                return this.blogPostsService.filterByAuthorAndCategory(category,authorId);
+            }
+        }
     }
     @GetMapping("/{id}")
     public BlogPost getById(@PathVariable UUID id){

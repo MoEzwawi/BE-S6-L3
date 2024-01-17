@@ -1,5 +1,6 @@
 package MoEzwawi.BES6L2.controllers;
 
+import MoEzwawi.BES6L2.entities.BlogPost;
 import MoEzwawi.BES6L2.entities.User;
 import MoEzwawi.BES6L2.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;

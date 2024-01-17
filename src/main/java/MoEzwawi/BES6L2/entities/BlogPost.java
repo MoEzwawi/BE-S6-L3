@@ -8,7 +8,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "blog_posts")
 public class BlogPost {
@@ -30,4 +29,16 @@ public class BlogPost {
     @JoinColumn(name = "author_id",nullable = false)
     private User author;
 
+    @Override
+    public String toString() {
+        return "BlogPost{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", category=" + category +
+                ", coverUrl='" + coverUrl + '\'' +
+                ", content='" + content + '\'' +
+                ", readingTime=" + readingTime +
+                ", author=" + author.getSurname() +
+                '}';
+    }
 }

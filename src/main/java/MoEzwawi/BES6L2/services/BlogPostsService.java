@@ -3,6 +3,7 @@ package MoEzwawi.BES6L2.services;
 import MoEzwawi.BES6L2.dtos.BlogPostDTO;
 import MoEzwawi.BES6L2.entities.BlogPost;
 import MoEzwawi.BES6L2.entities.User;
+import MoEzwawi.BES6L2.entities.enums.BlogPostCategory;
 import MoEzwawi.BES6L2.exceptions.NotFoundException;
 import MoEzwawi.BES6L2.repositories.BlogPostsRepository;
 import MoEzwawi.BES6L2.repositories.UsersRepository;
@@ -66,6 +67,17 @@ public class BlogPostsService {
     public void findByIdAndDelete(UUID id){
         BlogPost found = this.findById(id);
         this.blogPostsRepository.delete(found);
+    }
+    public List<BlogPost> filterByAuthor(UUID id){
+        User found = this.usersService.findById(id);
+        return this.blogPostsRepository.findByAuthor(found);
+    }
+    public List<BlogPost> filterByCategory(BlogPostCategory category){
+        return this.blogPostsRepository.findByCategory(category);
+    }
+    public List<BlogPost> filterByAuthorAndCategory(BlogPostCategory category, UUID authorId){
+        User author = this.usersService.findById(authorId);
+        return this.blogPostsRepository.findByCategoryAndAuthor(category,author);
     }
 /*    public List<BlogPost> filterByCategory(String category){
 

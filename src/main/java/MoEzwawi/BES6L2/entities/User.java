@@ -1,5 +1,6 @@
 package MoEzwawi.BES6L2.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,7 +13,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "users")
 public class User {
@@ -29,5 +29,19 @@ public class User {
     private LocalDate dateOfBirth;
     @Column(name = "avatar_url")
     private String avatarUrl;
+    @JsonIgnore
+    @OneToMany(mappedBy = "author")
+    private List<BlogPost> blogPosts;
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                '}';
+    }
 }

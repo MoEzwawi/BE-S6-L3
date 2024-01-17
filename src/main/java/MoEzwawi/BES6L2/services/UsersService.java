@@ -1,5 +1,6 @@
 package MoEzwawi.BES6L2.services;
 
+import MoEzwawi.BES6L2.entities.BlogPost;
 import MoEzwawi.BES6L2.entities.User;
 import MoEzwawi.BES6L2.exceptions.NotFoundException;
 import MoEzwawi.BES6L2.repositories.UsersRepository;
@@ -19,11 +20,12 @@ public class UsersService {
     public User findById(UUID id){
         return this.usersRepository.findById(id).orElseThrow(NotFoundException::new);
     }
+
     public User save(User body){
         System.out.println("--------------SAVE------------");
-        System.out.println(body);
         body.setAvatarUrl("https://ui-avatars.com/api/?name="+body.getName()+"+"+body.getSurname());
         this.usersRepository.save(body);
+        System.out.println(body);
         return body;
     }
     public User findByIdAndUpdate(UUID id, User body){
