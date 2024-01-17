@@ -1,47 +1,52 @@
 package MoEzwawi.BES6L2.services;
 
+import MoEzwawi.BES6L2.dtos.BlogPostDTO;
 import MoEzwawi.BES6L2.entities.BlogPost;
-import MoEzwawi.BES6L2.entities.enums.BlogPostCategory;
+import MoEzwawi.BES6L2.entities.User;
 import MoEzwawi.BES6L2.exceptions.NotFoundException;
+import MoEzwawi.BES6L2.repositories.BlogPostsRepository;
+import MoEzwawi.BES6L2.repositories.UsersRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.UUID;
 
 @Service
 public class BlogPostsService {
-    private List<BlogPost> blogPosts = new ArrayList<>();
-
+    @Autowired
+    private BlogPostsRepository blogPostsRepository;
+    @Autowired
+    private UsersService usersService;
     public List<BlogPost> getBlogPosts() {
-        return this.blogPosts;
+        return this.blogPostsRepository.findAll();
     }
-    public BlogPost findById(int id){
-        BlogPost found = null;
-        for (BlogPost user: blogPosts){
-            if(user.getId()==id){
-                found = user;
-            }
-        }
-        if(found==null) throw new NotFoundException();
-        return found;
+    public BlogPost findById(UUID id){
+        return this.blogPostsRepository.findById(id).orElseThrow(NotFoundException::new);
     }
-    public BlogPost save(BlogPost body){
-        System.out.println("--------------SAVE------------");
-        System.out.println(body);
-        Random rndm = new Random();
-        body.setId(rndm.nextInt(100,999));
-        this.blogPosts.add(body);
-        return body;
+    public BlogPost save(BlogPostDTO body){
+        UUID userId = body.getAuthorId();
+        User author = this.usersService.findById(userId);
+        BlogPost newBlogPost = new BlogPost();
+        newBlogPost.setAuthor(author);
+        String title = body.getTitle() == null ? "New blog post" : body.getTitle();
+        newBlogPost.setTitle(title);
+        newBlogPost.setCategory(body.getCategory());
+        String content = body.getContent() == null ? "" : body.getContent();
+        newBlogPost.setContent(content);
+        String cUrl = body.getCoverUrl() == null ? "https://picsum.photos/200/300" : body.getCoverUrl();
+        newBlogPost.setCoverUrl(cUrl);
+        int readingMinutes = content.length()/60;
+        newBlogPost.setReadingTime(readingMinutes);
+        blogPostsRepository.save(newBlogPost);
+        return newBlogPost;
     }
-    public BlogPost findByIdAndUpdate(int id, BlogPost body){
+    public BlogPost findByIdAndUpdateContent(UUID id, BlogPost body){
         BlogPost found = this.findById(id);
-        found.setTitle(body.getTitle());
         found.setContent(body.getContent());
-        found.setReadingTime(body.getReadingTime());
         return found;
     }
-    public BlogPost patchBlogPost(int id, BlogPost partialBlogPost){
+    public BlogPost patchBlogPost(UUID id, BlogPost partialBlogPost){
         BlogPost found = this.findById(id);
         if(partialBlogPost.getCategory()!=null) found.setCategory(partialBlogPost.getCategory());
         if(partialBlogPost.getTitle()!=null) found.setTitle(partialBlogPost.getTitle());
@@ -50,12 +55,11 @@ public class BlogPostsService {
         if(partialBlogPost.getCoverUrl()!=null) found.setCoverUrl(partialBlogPost.getCoverUrl());
         return found;
     }
-    public void findByIdAndDelete(int id){
-        this.blogPosts.removeIf(current -> current.getId() == id);
+    public void findByIdAndDelete(UUID id){
+        BlogPost found = this.findById(id);
+        this.blogPostsRepository.delete(found);
     }
-    public List<BlogPost> filterByCategory(String category){
-        return this.blogPosts.stream()
-                .filter(post->post.getCategory().equals(BlogPostCategory.valueOf(category)))
-                .toList();
-    }
+/*    public List<BlogPost> filterByCategory(String category){
+
+    }*/
 }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -18,7 +19,7 @@ public class UsersController {
         return usersService.getUsers();
     }
     @GetMapping("/{id}")
-    public User getById(@PathVariable int id){
+    public User getById(@PathVariable UUID id){
         return usersService.findById(id);
     }
     @PostMapping
@@ -27,16 +28,16 @@ public class UsersController {
         return usersService.save(body);
     }
     @PutMapping("/{id}")
-    public User update(@PathVariable int id,@RequestBody User body){
+    public User update(@PathVariable UUID id,@RequestBody User body){
         return usersService.findByIdAndUpdate(id, body);
     }
     @PatchMapping("/{id}")
-    public User patchUser(@PathVariable int id, @RequestBody User partialBody){
+    public User patchUser(@PathVariable UUID id, @RequestBody User partialBody){
         return this.usersService.patchUser(id,partialBody);
     }
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT) // status code 204
-    public void findByIdAndDelete(@PathVariable int id){
+    public void findByIdAndDelete(@PathVariable UUID id){
         usersService.findByIdAndDelete(id);
     }
 }
