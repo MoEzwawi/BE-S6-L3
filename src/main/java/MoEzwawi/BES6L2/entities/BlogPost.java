@@ -22,6 +22,7 @@ public class BlogPost {
     private BlogPostCategory category;
     @Column(name = "cover_url")
     private String coverUrl;
+    @Column(length = 1000)
     private String content;
     @Column(name = "reading_time")
     private int readingTime;

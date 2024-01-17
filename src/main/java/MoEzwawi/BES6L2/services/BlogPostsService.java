@@ -25,20 +25,28 @@ public class BlogPostsService {
         return this.blogPostsRepository.findById(id).orElseThrow(NotFoundException::new);
     }
     public BlogPost save(BlogPostDTO body){
+        System.out.println("--------------SAVE------------");
         UUID userId = body.getAuthorId();
         User author = this.usersService.findById(userId);
         BlogPost newBlogPost = new BlogPost();
+        // 1 - SET AUTHOR
         newBlogPost.setAuthor(author);
         String title = body.getTitle() == null ? "New blog post" : body.getTitle();
+        // 2 - SET TITLE
         newBlogPost.setTitle(title);
+        // 3 - SET CATEGORY
         newBlogPost.setCategory(body.getCategory());
         String content = body.getContent() == null ? "" : body.getContent();
+        // 4 - SET CONTENT
         newBlogPost.setContent(content);
         String cUrl = body.getCoverUrl() == null ? "https://picsum.photos/200/300" : body.getCoverUrl();
+        // 5 - SET COVER URL
         newBlogPost.setCoverUrl(cUrl);
         int readingMinutes = content.length()/60;
+        // 6 - SET READING TIME
         newBlogPost.setReadingTime(readingMinutes);
         blogPostsRepository.save(newBlogPost);
+        System.out.println(newBlogPost);
         return newBlogPost;
     }
     public BlogPost findByIdAndUpdateContent(UUID id, BlogPost body){
