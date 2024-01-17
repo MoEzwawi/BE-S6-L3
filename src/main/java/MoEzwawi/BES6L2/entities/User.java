@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Cascade;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -29,9 +30,6 @@ public class User {
     private LocalDate dateOfBirth;
     @Column(name = "avatar_url")
     private String avatarUrl;
-    @JsonIgnore
-    @OneToMany(mappedBy = "author")
-    private List<BlogPost> blogPosts;
 
     @Override
     public String toString() {

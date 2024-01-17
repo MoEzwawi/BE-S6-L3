@@ -6,7 +6,6 @@ import MoEzwawi.BES6L2.entities.User;
 import MoEzwawi.BES6L2.entities.enums.BlogPostCategory;
 import MoEzwawi.BES6L2.exceptions.NotFoundException;
 import MoEzwawi.BES6L2.repositories.BlogPostsRepository;
-import MoEzwawi.BES6L2.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class BlogPostsService {
         return this.blogPostsRepository.findAll();
     }
     public BlogPost findById(UUID id){
-        return this.blogPostsRepository.findById(id).orElseThrow(NotFoundException::new);
+        return this.blogPostsRepository.findById(id).orElseThrow(()->new NotFoundException(id));
     }
     public BlogPost save(BlogPostDTO body){
         System.out.println("--------------SAVE------------");
